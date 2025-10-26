@@ -1,0 +1,16 @@
+
+/out/
+/target/
+/build/
+*.class
+*.jar
+*.war
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+/data/pages/
+/data/index/index_backup_*.txt
+*.tmp
+*.log
