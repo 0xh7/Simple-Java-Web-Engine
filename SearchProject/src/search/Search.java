@@ -7,7 +7,6 @@ public class Search {
 
     public List<String> search(String query, InvertedIndex index) {
         if (query == null || query.isEmpty() || index == null) return Collections.emptyList();
-
         final int N = Math.max(0, index.totalDocs());
 
         Map<String, Double> scores = new HashMap<>();
