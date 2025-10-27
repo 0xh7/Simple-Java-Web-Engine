@@ -14,6 +14,7 @@ public class TextParser {
                 .replaceAll("(?is)<script[^>]*?>.*?</script>", " ")
                 .replaceAll("(?is)<style[^>]*?>.*?</style>", " ")
                 .replaceAll("(?is)<[^>]+>", " ");
+        
 
         text = text.replace("&nbsp;", " ")
                    .replace("&amp;", "&")
