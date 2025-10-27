@@ -28,7 +28,8 @@ cd C:\CJavaProjects\SearchProject
 
 2. Compile all source files into the out folder
 
-```javac -d out src\util\*.java src\crawler\*.java src\indexer\*.java src\search\*.java src\app\*.java
+```
+javac -d out src\util\*.java src\crawler\*.java src\indexer\*.java src\search\*.java src\app\*.java
 ```
 
 
