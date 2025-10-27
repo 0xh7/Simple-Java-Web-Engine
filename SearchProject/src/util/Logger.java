@@ -42,7 +42,7 @@ public final class Logger {
     public static void error(String msg, Throwable t) {
         log(Level.ERROR, msg, t);
     }
-
+    
     private static void log(Level lvl, String msg, Throwable t) {
         if (lvl.ordinal() < current.ordinal()) {
             return;
