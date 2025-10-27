@@ -21,6 +21,7 @@ It crawls websites, downloads pages, indexes text, and performs keyword search u
 1. Open Command Prompt and go to the project 
 ```cmd
 cd C:\CJavaProjects\SearchProject 
+```
 
 
 
