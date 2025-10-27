@@ -28,7 +28,7 @@ cd C:\CJavaProjects\SearchProject
 
 2. Compile all source files into the out folder
 
-```
+```cmd
 javac -d out src\util\*.java src\crawler\*.java src\indexer\*.java src\search\*.java src\app\*.java
 ```
 
@@ -48,10 +48,14 @@ java -cp out app.Main <Url> <depth> <mode> <query>
 
 ## Examples
 Multi thread  with depth 2
+```cmd
 java -cp out app.Main https://example.com 2 m example
+```
 
 
 single-thread with depth 3
+```cmd
 java -cp out app.Main https://example.com 3 s example
+```
 
 
