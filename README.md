@@ -13,3 +13,5 @@ It crawls websites, downloads pages, indexes text, and performs keyword search u
 **Made by 0xh7**
 
 > ⚠️ No respect for `robots.txt`
+>
+> edit by ego 
