@@ -40,7 +40,7 @@ public final class Utils {
         if (dot < 0 || dot == url.length() - 1) return "";
         return url.substring(dot + 1).toLowerCase();
     }
-
+    
     public static boolean isNonHtmlResource(String url) {
         String ext = extLower(url);
         return BINARY_OR_NON_HTML_EXTS.contains(ext);
