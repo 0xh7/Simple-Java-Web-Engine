@@ -1,22 +1,23 @@
+package crawler;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import util.Logger;
 
 public class SimpleLinkExtractor implements LinkExtractor {
 
-    // يلتقط href في <a>/<link>/<area> سواءً بقوسين أو بدون
     private static final Pattern HREF_PATTERN =
         Pattern.compile("(?is)<\\s*(a|area|link)\\b[^>]*?\\bhref\\s*=\\s*(\"([^\"]*)\"|'([^']*)'|([^\\s>]+))");
 
-    // يلتقط src في <img>/<script>/<iframe> (احتياطي)
     private static final Pattern SRC_PATTERN =
         Pattern.compile("(?is)<\\s*(img|script|iframe)\\b[^>]*?\\bsrc\\s*=\\s*(\"([^\"]*)\"|'([^']*)'|([^\\s>]+))");
 
-    // يلتقط meta refresh إن وُجد
     private static final Pattern META_REFRESH_URL =
         Pattern.compile("(?is)<meta\\s+[^>]*http-equiv\\s*=\\s*(?:\"refresh\"|'refresh'|refresh)[^>]*content\\s*=\\s*(?:\"|')\\s*\\d+\\s*;\\s*url\\s*=\\s*([^\"'>\\s;]+)");
 
@@ -27,7 +28,12 @@ public class SimpleLinkExtractor implements LinkExtractor {
 
         Set<String> uniq = new HashSet<>();
         URI base;
-        try { base = new URI(baseUrl); } catch (Exception e) { return links; }
+        try {
+            base = new URI(baseUrl);
+        } catch (URISyntaxException e) {
+            Logger.warn("Invalid base URL: " + baseUrl);
+            return links;
+        }
 
         extractWithPattern(HREF_PATTERN, htmlContent, base, uniq, links);
         extractWithPattern(SRC_PATTERN, htmlContent, base, uniq, links);
@@ -43,14 +49,15 @@ public class SimpleLinkExtractor implements LinkExtractor {
     private static void extractWithPattern(Pattern p, String html, URI base, Set<String> uniq, List<String> out) {
         Matcher m = p.matcher(html);
         while (m.find()) {
-            // group3 أو group4 أو group5 واحد منهم يحتوي القيمة
             String raw = firstNonNull(m.group(3), m.group(4), m.group(5));
             if (raw == null) continue;
             raw = raw.trim();
             if (raw.isEmpty()) continue;
             if (raw.startsWith("#")) continue;
-            if (raw.toLowerCase().startsWith("mailto:")) continue;
-            if (raw.toLowerCase().startsWith("javascript:")) continue;
+
+            String lower = raw.toLowerCase(Locale.ROOT);
+            if (lower.startsWith("mailto:")) continue;
+            if (lower.startsWith("javascript:")) continue;
 
             resolveAdd(base, raw, uniq, out);
         }
@@ -63,7 +70,9 @@ public class SimpleLinkExtractor implements LinkExtractor {
             if (abs.startsWith("http://") || abs.startsWith("https://")) {
                 if (uniq.add(abs)) out.add(abs);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            Logger.debug("Failed to resolve URL: " + raw + " against base " + base + " (" + e.getMessage() + ")");
+        }
     }
 
     private static String firstNonNull(String... arr) {

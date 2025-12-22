@@ -1,8 +1,12 @@
+package util;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -39,7 +43,7 @@ public final class Utils {
         if (dot < 0 || dot == url.length() - 1) return "";
         return url.substring(dot + 1).toLowerCase();
     }
-
+    
     public static boolean isNonHtmlResource(String url) {
         String ext = extLower(url);
         return BINARY_OR_NON_HTML_EXTS.contains(ext);
@@ -57,7 +61,7 @@ public final class Utils {
 
     public static void writeAtomic(Path target, Consumer<BufferedWriter> writerConsumer) throws IOException {
         ensureParentDirs(target);
-        Path tmp = target.resolveSibling(target.getFileName() + ".tmp");
+        Path tmp = target.resolveSibling(target.getFileName().toString() + ".tmp");
         try (BufferedWriter w = newUtf8Writer(tmp, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             writerConsumer.accept(w);
         }
@@ -67,6 +71,21 @@ public final class Utils {
     public static String shortHex(String s) {
         if (s == null) return "00000000";
         int h = s.hashCode();
-        return String.format("%08x", h);
+        return String.format(Locale.ROOT, "%08x", h);
+    }
+
+    public static String sha256(String input) {
+        if (input == null) return "";
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder(digest.length * 2);
+            for (byte b : digest) {
+                sb.append(String.format(Locale.ROOT, "%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 not available", e);
+        }
     }
 }

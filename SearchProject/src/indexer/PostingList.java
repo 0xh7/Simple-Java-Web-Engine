@@ -1,10 +1,11 @@
+package indexer;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class PostingList {
-    private final Map<String, Integer> freqByDoc = new HashMap<>();
+    private final Map<String, Integer> freqByDoc = new LinkedHashMap<>();
 
     public void increment(String doc) {
         freqByDoc.merge(doc, 1, Integer::sum);

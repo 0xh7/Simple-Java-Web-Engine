@@ -1,3 +1,4 @@
+package crawler;
 import java.util.List;
 
 public interface LinkExtractor {
